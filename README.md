@@ -1,6 +1,8 @@
 # movies_app
 
-A new Flutter project.
+A new Flutter project based on Fernando Herrera's amazing advanced course.
+
+Movie database app consuming from public rest API https://www.themoviedb.org/documentation/api.
 
 ## Getting Started
 
