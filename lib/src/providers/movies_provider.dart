@@ -73,17 +73,16 @@ class MovieProvider {
     return resp;
   }
 
-  Future<List<Actor>> getCast(String movieId) async {
+  Future<List<Actor>> getCast(int movieId) async {
     final url = Uri.https(
       _url,
-      '/movie/$movieId/credits',
+      '/3/movie/$movieId/credits',
       {'api_key': _apikey, 'language': _language},
     );
 
     final resp = await http.get(url);
 
-    //json.decode() toma todo el cuerpo del json y lo mapea
-
+    // json.decode() toma todo el cuerpo del json y lo mapea
     final decodedData = json.decode(resp.body);
 
     // pasa al método 'fromJsonList' del constructor de la clase 'Cast'
@@ -91,5 +90,19 @@ class MovieProvider {
     final cast = new Cast.fromJsonList(decodedData['cast']);
 
     return cast.actors;
+  }
+
+  Future<List<Movie>> searchMovie(String query) async {
+    final url = Uri.https(
+      _url,
+      '3/search/movie',
+      {
+        'api_key': _apikey,
+        'language': _language,
+        'query': query,
+      },
+    );
+
+    return await _processResponse(url);
   }
 }

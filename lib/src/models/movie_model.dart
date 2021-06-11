@@ -31,6 +31,7 @@ class Movies {
 }
 
 class Movie {
+  String uniqueId; // custom property, not in api
   bool adult;
   String backdropPath;
   List<int> genreIds;

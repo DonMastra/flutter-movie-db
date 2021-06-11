@@ -66,13 +66,16 @@ class MovieDetailPage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20.0),
-          child: Image(
-            image: NetworkImage(
-              movie.getPosterImg(),
+        Hero(
+          tag: movie.uniqueId,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: Image(
+              image: NetworkImage(
+                movie.getPosterImg(),
+              ),
+              height: 150.0,
             ),
-            height: 150.0,
           ),
         ),
         SizedBox(
@@ -122,8 +125,9 @@ class MovieDetailPage extends StatelessWidget {
     final movieProvider = new MovieProvider();
 
     return FutureBuilder(
-      future: movieProvider.getCast(movie.id.toString()),
+      future: movieProvider.getCast(movie.id),
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        print('SnapshotData: $snapshot');
         if (snapshot.hasData) {
           return _createPageViewActors(snapshot.data);
         } else {
@@ -139,14 +143,37 @@ class MovieDetailPage extends StatelessWidget {
     return SizedBox(
       height: 200.0,
       child: PageView.builder(
+        pageSnapping: false,
         itemCount: actors.length,
         controller: PageController(
           viewportFraction: 0.3,
           initialPage: 1,
         ),
         itemBuilder: (context, i) {
-          return Text(actors[i].name);
+          return _cardActor(actors[i]);
         },
+      ),
+    );
+  }
+
+  Widget _cardActor(Actor actor) {
+    return Container(
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: FadeInImage(
+              placeholder: AssetImage('assets/img/no-image.jpg'),
+              image: NetworkImage(actor.getPhoto()),
+              height: 150.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Text(
+            actor.name,
+            overflow: TextOverflow.ellipsis,
+          )
+        ],
       ),
     );
   }
